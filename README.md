@@ -1,6 +1,6 @@
 # Fraud App Detection Using Sentiment Analysis
 
-A Django REST Framework backend application that helps users distinguish genuine mobile apps from potentially fraudulent or low-quality apps by analyzing user-generated feedback (reviews/ratings) using GenAI-powered sentiment analysis.
+A full-stack Django application (REST API + web frontend) that helps users distinguish genuine mobile apps from potentially fraudulent or low-quality apps by analyzing user-generated feedback (reviews/ratings) using GenAI-powered sentiment analysis.
 
 ## Project Overview
 
@@ -11,16 +11,20 @@ This project uses Large Language Models (LLMs) via the Groq API to analyze app r
 
 ## Features
 
-- **User Authentication**: JWT-based authentication system
-- **App Management**: Store and manage mobile app metadata
-- **Review Management**: Bulk upload and manage user reviews for apps
-- **AI-Powered Analysis**: LLM-based fraud detection using review sentiment and patterns
-- **Analysis History**: Track all analysis runs with full auditability
+- **Web frontend**: Landing, dashboard, app detail, analysis history, profile, compare apps, watchlist, insights, developer profiles, learn page, and community reports
+- **User authentication**: JWT-based authentication (register, login, token refresh)
+- **App management**: Store and manage mobile app metadata
+- **Review management**: Bulk upload and manage user reviews for apps
+- **AI-powered analysis**: LLM-based fraud detection using review sentiment and patterns
+- **Analysis history**: Track all analysis runs with full auditability
+- **Watchlist**: Save apps to a personal watchlist and toggle/check status via API
+- **Insights**: Category-level insights and developer list/detail APIs
+- **Community reports**: Browse and manage community-reported app assessments
 
 ## Project Structure
 
 ```
-fraud_app_detector/
+.
 ├── manage.py
 ├── fraud_app_detector/
 │   ├── settings.py
@@ -29,10 +33,14 @@ fraud_app_detector/
 │   └── asgi.py
 ├── apps/
 │   ├── accounts/          # User authentication and profiles
-│   ├── apps_store/        # Mobile app metadata management
+│   ├── apps_store/        # Mobile app metadata, watchlist, insights, community reports
 │   ├── reviews/           # Review storage and management
-│   └── analysis/          # LLM-based fraud analysis
-└── requirements.txt
+│   ├── analysis/          # LLM-based fraud analysis
+│   └── frontend/          # Web UI (templates + static JS/CSS)
+├── docs/                  # Design docs, DFD diagrams
+├── scripts/               # Seed data, DFD generation, screenshots, etc.
+├── requirements.txt
+└── .env.example
 ```
 
 ## Installation
@@ -40,21 +48,44 @@ fraud_app_detector/
 ### Prerequisites
 
 - Python 3.8 or higher
-- pip (Python package manager)
+- pip (Python package manager), or [uv](https://docs.astral.sh/uv/) (faster alternative)
+
+### Windows: Execution policy (PowerShell)
+
+If you use PowerShell and get errors when activating the virtual environment or running scripts, you may need to allow script execution. Run PowerShell **as Administrator** and set:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Or for the current process only (no admin):
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+```
 
 ### Setup Steps
 
 1. **Clone or navigate to the project directory**
 
 2. **Create a virtual environment (recommended)**
-   ```bash
-   python -m venv venv
-   ```
+   - With standard Python/pip:
+     ```bash
+     python -m venv venv
+     ```
+   - With [uv](https://docs.astral.sh/uv/) (install from https://docs.astral.sh/uv/getting-started/):
+     ```bash
+     uv venv
+     ```
 
 3. **Activate the virtual environment**
-   - On Windows:
+   - On Windows (Command Prompt):
      ```bash
      venv\Scripts\activate
+     ```
+   - On Windows (PowerShell; if you see execution policy errors, see **Windows: Execution policy** above):
+     ```powershell
+     .\venv\Scripts\Activate.ps1
      ```
    - On Linux/Mac:
      ```bash
@@ -62,9 +93,14 @@ fraud_app_detector/
      ```
 
 4. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+   - With pip:
+     ```bash
+     pip install -r requirements.txt
+     ```
+   - With uv:
+     ```bash
+     uv pip install -r requirements.txt
+     ```
 
 5. **Configure environment variables**
    
@@ -94,19 +130,26 @@ fraud_app_detector/
    python manage.py createsuperuser
    ```
 
-8. **Run the development server**
+8. **Seed the database (optional)**  
+   Populates the database with sample users, apps, reviews, watchlist items, and community reports via the API. **Start the development server first** (step 9) in another terminal, then run:
+   ```bash
+   python scripts/seed_data.py
+   ```
+   The script expects the app at `http://127.0.0.1:8000`.
+
+9. **Run the development server**
    ```bash
    python manage.py runserver
    ```
 
-The API will be available at `http://localhost:8000/`
+The app and API are available at `http://localhost:8000/` (web UI at `/`, `/dashboard/`, etc.; API under `/api/`).
 
 ## API Endpoints
 
 ### Authentication (`/api/auth/`)
 
 - `POST /api/auth/register/` - Register a new user
-- `POST /api/auth/login/` - Login (obtain JWT token)
+- `POST /api/auth/token/` - Login (obtain JWT access/refresh tokens)
 - `POST /api/auth/token/refresh/` - Refresh JWT token
 - `GET /api/auth/me/` - Get current user info
 
@@ -133,6 +176,24 @@ The API will be available at `http://localhost:8000/`
 - `GET /api/analysis/` - List analysis runs (filter by `?app=<id>`)
 - `GET /api/analysis/<id>/` - Get analysis details
 
+### Watchlist (`/api/watchlist/`)
+
+- `GET /api/watchlist/` - List user's watchlist items
+- `POST /api/watchlist/toggle/` - Add or remove an app from watchlist
+- `GET /api/watchlist/check/<app_id>/` - Check if app is in watchlist
+
+### Insights (`/api/insights/`)
+
+- `GET /api/insights/categories/` - Category-level insights
+- `GET /api/insights/developers/` - List developers
+- `GET /api/insights/developers/<name>/` - Developer detail
+
+### Community Reports (`/api/reports/`)
+
+- `GET /api/reports/` - List community reports
+- `POST /api/reports/` - Create a report (if supported)
+- `GET /api/reports/<id>/` - Get report details
+
 ## Usage Examples
 
 ### 1. Register a User
@@ -148,7 +209,7 @@ curl -X POST http://localhost:8000/api/auth/register/ \
   }'
 ```
 
-### 2. Login and Get Token
+### 2. Login and Get Tokens
 
 ```bash
 curl -X POST http://localhost:8000/api/auth/token/ \
@@ -158,6 +219,7 @@ curl -X POST http://localhost:8000/api/auth/token/ \
     "password": "securepassword123"
   }'
 ```
+Returns `access` and `refresh` tokens; use the `access` token in the `Authorization: Bearer <token>` header for protected endpoints.
 
 ### 3. Create an App
 
@@ -230,6 +292,7 @@ All configuration is done via environment variables (loaded from `.env` file). T
 - `JWT_ACCESS_MINUTES` - JWT access token lifetime in minutes (default: 30)
 - `JWT_REFRESH_DAYS` - JWT refresh token lifetime in days (default: 7)
 - `LOG_LEVEL` - Logging level (default: INFO)
+- `ANALYSIS_THROTTLE_RATE` - Throttle for analysis runs per user (e.g. `10/hour`; increase for development if needed)
 
 ### Groq Setup
 
@@ -280,6 +343,4 @@ This project is for academic/research purposes.
 ## Support
 
 For issues or questions, please refer to the project documentation or contact the development team.
-
-# farud-app-detection
 
