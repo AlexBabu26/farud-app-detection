@@ -1,0 +1,91 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Dashboard — AppShield{% endblock %}
+{% block head_scripts %}
+<script defer src="{% static 'frontend/js/pages/dashboard.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-actions flex-wrap items-center justify-between gap-4">
+  <h1 class="page-title" style="margin-bottom: 0;">Dashboard</h1>
+  <div class="flex-wrap gap-3">
+    <a href="/compare/" class="btn-secondary">Compare Apps</a>
+    <a href="/watchlist/" class="btn-secondary">Watchlist</a>
+    <a href="/reports/" class="btn-secondary">Community Reports</a>
+    <a href="/analysis/" class="btn-secondary">Analysis History</a>
+  </div>
+</div>
+
+<div class="card mb-8">
+  <div class="card-header">Create App</div>
+  <div class="card-body">
+    <form id="createAppForm" class="form-grid">
+      <div>
+        <label>App name</label>
+        <input class="input-modern" name="name" placeholder="App name" required />
+      </div>
+      <div>
+        <label>Package name (unique)</label>
+        <input class="input-modern font-mono" name="package_name" placeholder="com.example.app" required />
+      </div>
+      <div>
+        <label>Store URL (optional)</label>
+        <input class="input-modern" name="store_url" placeholder="https://..." />
+      </div>
+      <div>
+        <label>Developer (optional)</label>
+        <input class="input-modern" name="developer" placeholder="Developer name" />
+      </div>
+      <div>
+        <label>Category (optional)</label>
+        <input class="input-modern" name="category" placeholder="Finance, Games, ..." />
+      </div>
+      <div class="col-span-2">
+        <label>Description (optional)</label>
+        <textarea class="input-modern" name="description" placeholder="App description from the store..." rows="3"></textarea>
+      </div>
+      <div class="col-span-2">
+        <label>Privacy Policy Text (optional)</label>
+        <textarea class="input-modern" name="privacy_policy_text" placeholder="Paste the privacy policy text here for analysis..." rows="3"></textarea>
+      </div>
+      <div class="flex-wrap items-end">
+        <button class="btn-primary w-full" type="submit">Create</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card mb-8">
+  <div class="card-header flex-wrap items-center justify-between">
+    <span>Your Apps</span>
+    <div class="flex-wrap gap-2">
+      <button class="btn-secondary text-small" id="btnBulkAnalyze" type="button" style="padding:6px 14px;" disabled>Analyze Selected</button>
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="table-modern" id="appsTable">
+      <thead>
+        <tr>
+          <th style="width:1%"><input type="checkbox" id="selectAllApps" title="Select all" /></th>
+          <th>Name</th>
+          <th>Package</th>
+          <th>Developer</th>
+          <th>Safety Score</th>
+          <th>Created</th>
+          <th style="width: 1%"></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="card-body text-muted text-center" id="appsEmpty" style="display:none;">No apps yet. Create one above.</div>
+</div>
+
+<div id="bulkProgress" class="card mb-8" style="display:none;">
+  <div class="card-header">Bulk Analysis Progress</div>
+  <div class="card-body">
+    <div id="bulkProgressText" class="text-small text-muted">Running analysis...</div>
+    <div id="bulkResults" style="margin-top:12px;"></div>
+  </div>
+</div>
+{% endblock %}

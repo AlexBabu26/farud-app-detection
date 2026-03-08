@@ -1,0 +1,151 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}App Intelligence & Consumer Safety — AppShield{% endblock %}
+{% block main_class %}full-bleed{% endblock %}
+{% block head_scripts %}
+<script defer src="{% static 'frontend/js/pages/landing.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="hero-title">App Intelligence &amp; Consumer Safety Platform.</h1>
+    <p class="hero-subtitle">
+      Go beyond fraud detection. Understand, compare, monitor, and stay safe with multi-dimensional app analysis powered by advanced AI.
+    </p>
+    <div class="hero-actions">
+      <input type="text" id="heroScanInput" class="input-modern" placeholder="Paste App Store URL or Package ID" autocomplete="off" style="max-width: 320px;" />
+      <button type="button" id="heroRunScan" class="btn-primary">Run Analysis</button>
+      <a href="/register/" class="btn-secondary">Get Started</a>
+    </div>
+    <p class="text-small text-muted">
+      Not signed in? <a href="/login/" class="link-primary">Login</a> to run analysis on your apps.
+    </p>
+    <div class="disclaimer-box">
+      <strong>Disclaimer:</strong> This tool provides risk classification based on review text and metadata. It does not perform malware analysis.
+    </div>
+  </div>
+  <div class="hero-inner" style="flex: 1 1 360px; max-width: 420px;">
+    <div class="card" style="position: relative; overflow: hidden;">
+      <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+        <div class="scan-line" style="width: 100%;"></div>
+      </div>
+      <div class="card-body" style="position: relative;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: pulse 1.5s ease-in-out infinite;"></span>
+          <span class="text-small text-muted">In-Progress Scan</span>
+        </div>
+        <div class="skeleton skeleton-text" style="width: 100%;"></div>
+        <div class="skeleton skeleton-text" style="width: 85%;"></div>
+        <div class="skeleton skeleton-text" style="width: 60%;"></div>
+        <div style="height: 72px; border-radius: 8px; background: var(--bg-page); display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 0.875rem; margin: 16px 0;">Health Score Radar</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 48px 24px; background: var(--bg-white); border-top: 1px solid var(--border);">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <h2 class="section-title-light">12 Powerful Capabilities</h2>
+    <p class="text-muted text-small" style="text-align: center; margin-bottom: 32px;">More than fraud detection — a complete app intelligence platform.</p>
+    <div class="features-landing-grid">
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">01</div>
+        <h3>Comparative Analysis</h3>
+        <p>Compare 2–5 apps side-by-side to make informed installation decisions.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">02</div>
+        <h3>App Watchlist</h3>
+        <p>Monitor apps over time and track safety score changes.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">03</div>
+        <h3>Trend Timeline</h3>
+        <p>Visualize how an app's safety and sentiment evolve over time.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">04</div>
+        <h3>Category Insights</h3>
+        <p>Discover which app categories carry the highest risk.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">05</div>
+        <h3>Developer Profiles</h3>
+        <p>Track developer reputation across all their published apps.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">06</div>
+        <h3>Privacy Assessment</h3>
+        <p>Deep privacy analysis with policy readability and data-sharing scores.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">07</div>
+        <h3>Safety Recommendations</h3>
+        <p>Human-friendly, actionable advice: install, caution, or uninstall.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">08</div>
+        <h3>Community Reports</h3>
+        <p>Crowdsourced alerts — users flag suspicious apps for everyone.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">09</div>
+        <h3>Educational Content</h3>
+        <p>Learn to spot fake reviews, scam tactics, and privacy red flags.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">10</div>
+        <h3>Report Generation</h3>
+        <p>Export analysis results as downloadable, printable reports.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">11</div>
+        <h3>Health Score Radar</h3>
+        <p>Multi-dimensional health scores: Safety, Privacy, Quality, Trust, Sentiment.</p>
+      </div>
+      <div class="feature-landing-card">
+        <div class="feature-landing-num">12</div>
+        <h3>Bulk Scanning</h3>
+        <p>Analyze multiple apps at once for category-wide audits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-dark">
+  <h2 class="section-title">The Analysis Engine</h2>
+  <p class="section-subtitle">AI-powered analysis combining NLP, sentiment intelligence, and developer reputation checks.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <h3 class="feature-card-title">NLP Processing</h3>
+      <p class="feature-card-desc">Keywords such as "scam," "fake," and "stole" are extracted and weighted to surface fraudulent patterns.</p>
+      <span class="feature-card-arrow" aria-hidden="true">&nearr;</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+      </div>
+      <h3 class="feature-card-title">Multi-Dimensional Analysis</h3>
+      <p class="feature-card-desc">Five health dimensions — Safety, Privacy, Quality, Trust, and Sentiment — provide a holistic app assessment.</p>
+      <span class="feature-card-arrow" aria-hidden="true">&nearr;</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <h3 class="feature-card-title">Developer Accountability</h3>
+      <p class="feature-card-desc">Track developer reputation across apps. One flagged app may reveal patterns across their entire portfolio.</p>
+      <span class="feature-card-arrow" aria-hidden="true">&nearr;</span>
+    </div>
+  </div>
+</section>
+<style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}</style>
+{% endblock %}

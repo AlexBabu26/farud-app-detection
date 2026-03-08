@@ -1,0 +1,30 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Login — Fraud App Detection{% endblock %}
+{% block head_scripts %}
+<script defer src="{% static 'frontend/js/pages/login.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 48px auto;">
+  <div class="card">
+    <div class="card-body">
+      <h1 class="page-title" style="margin-bottom: 24px;">Login</h1>
+      <form id="loginForm">
+        <div style="margin-bottom: 16px;">
+          <label>Username</label>
+          <input class="input-modern" name="username" required autocomplete="username" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label>Password</label>
+          <input class="input-modern" name="password" type="password" required autocomplete="current-password" />
+        </div>
+        <button class="btn-primary w-full" type="submit">Login</button>
+      </form>
+      <p class="text-small text-muted" style="margin-top: 24px;">
+        No account? <a href="/register/" class="link-primary">Register</a>.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

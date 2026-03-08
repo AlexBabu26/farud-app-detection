@@ -1,0 +1,57 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Analysis History — Fraud App Detection{% endblock %}
+{% block head_scripts %}
+<script defer src="{% static 'frontend/js/pages/analysis_history.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-actions flex-wrap items-center justify-between gap-4">
+  <h1 class="page-title" style="margin-bottom: 0;">Analysis History</h1>
+  <a href="/dashboard/" class="btn-secondary">Back to Dashboard</a>
+</div>
+
+<div class="card">
+  <div class="card-header flex-wrap items-center justify-between" style="gap: 16px;">
+    <span>Runs</span>
+    <div class="flex-wrap items-center gap-2">
+      <input class="input-modern" id="filterAppId" placeholder="Filter by app ID" style="max-width: 200px; padding: 8px 12px;" />
+      <button class="btn-secondary" id="btnApplyFilter" type="button" style="padding: 8px 16px;">Apply</button>
+      <button class="btn-secondary" id="btnClearFilter" type="button" style="padding: 8px 16px;">Clear</button>
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="table-modern" id="runsTable">
+      <thead>
+        <tr>
+          <th>Run ID</th>
+          <th>App</th>
+          <th>Status</th>
+          <th>Label</th>
+          <th>Confidence</th>
+          <th>Created</th>
+          <th class="col-action">Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="card-body text-muted text-center" id="runsEmpty" style="display:none;">No analysis runs found.</div>
+  <div class="pager" id="runsPager" style="display:none;">
+    <div class="pager-controls items-center gap-2">
+      <span class="text-small text-muted">Page size</span>
+      <select class="input-modern" id="runsPageSize" style="width: 80px; padding: 6px 10px;">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div class="pager-controls">
+      <button class="btn-secondary" id="runsPrev" type="button" style="padding: 6px 12px;">Prev</button>
+      <span class="pager-info" id="runsPageInfo">Page 1 of 1</span>
+      <button class="btn-secondary" id="runsNext" type="button" style="padding: 6px 12px;">Next</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

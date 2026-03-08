@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}AppShield — App Intelligence{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link href="{% static 'frontend/css/app.css' %}" rel="stylesheet" />
+
+  <script defer src="{% static 'frontend/js/api.js' %}"></script>
+  <script defer src="{% static 'frontend/js/auth.js' %}"></script>
+  <script defer src="{% static 'frontend/js/ui.js' %}"></script>
+  {% block head_scripts %}{% endblock %}
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="site-logo">
+      <span class="site-logo-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </span>
+      <span>AppShield</span>
+    </a>
+
+    <nav class="site-nav">
+      <a href="/" data-nav="/">Home</a>
+      <span id="navAuthedLinks" style="display:none;">
+        <a href="/dashboard/" data-nav="/dashboard/">Dashboard</a>
+        <a href="/analysis/" data-nav="/analysis/">Analysis</a>
+        <a href="/watchlist/" data-nav="/watchlist/">Watchlist</a>
+        <a href="/insights/" data-nav="/insights/">Insights</a>
+        <a href="/learn/" data-nav="/learn/">Learn</a>
+      </span>
+    </nav>
+
+    <div class="site-header-actions">
+      <span id="navAnonCta" style="display:none;">
+        <a href="/login/">Login</a>
+        <a href="/register/" class="btn-signup">Sign Up</a>
+      </span>
+      <span id="navLogout" style="display:none;">
+        <a href="/profile/" class="nav-profile-link" title="Profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <button type="button" id="btnLogout" class="btn-logout">Logout</button>
+      </span>
+    </div>
+  </header>
+
+  <main>
+    <div id="globalAlertHost" class="alert-host"></div>
+    <div class="main-content {% block main_class %}{% endblock %}">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var authed = typeof Auth !== "undefined" && Auth.hasAccessToken();
+      var navAuthed = document.getElementById("navAuthedLinks");
+      var navAnonCta = document.getElementById("navAnonCta");
+      var navLogout = document.getElementById("navLogout");
+      if (navAuthed) navAuthed.style.display = authed ? "inline" : "none";
+      if (navAnonCta) navAnonCta.style.display = authed ? "none" : "inline";
+      if (navLogout) navLogout.style.display = authed ? "inline" : "none";
+      var path = window.location.pathname;
+      document.querySelectorAll(".site-nav a[data-nav]").forEach(function(a) {
+        var navPath = a.getAttribute("data-nav");
+        if (navPath === "/" ? path === "/" : path.indexOf(navPath) === 0) a.classList.add("nav-active");
+        else a.classList.remove("nav-active");
+      });
+      document.getElementById("btnLogout") && document.getElementById("btnLogout").addEventListener("click", function() {
+        Auth.logout();
+        window.location.href = "/login/";
+      });
+    });
+  </script>
+  {% block body_scripts %}{% endblock %}
+</body>
+</html>

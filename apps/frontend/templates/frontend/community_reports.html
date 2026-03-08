@@ -1,0 +1,68 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Community Reports — AppShield{% endblock %}
+{% block head_scripts %}
+<script defer src="{% static 'frontend/js/pages/community_reports.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-actions flex-wrap items-center justify-between gap-4">
+  <h1 class="page-title" style="margin-bottom: 0;">Community Reports</h1>
+  <a href="/dashboard/" class="btn-secondary">Back to Dashboard</a>
+</div>
+
+<p class="text-muted mb-6">Browse community-submitted reports about suspicious apps. Help others stay safe by reporting apps you find concerning.</p>
+
+<div class="card mb-8">
+  <div class="card-header">Submit a Report</div>
+  <div class="card-body">
+    <form id="reportForm" class="form-grid">
+      <div>
+        <label>App</label>
+        <select class="input-modern" name="app" id="reportAppSelect" required>
+          <option value="">Select an app…</option>
+        </select>
+      </div>
+      <div>
+        <label>Reason</label>
+        <select class="input-modern" name="reason" required>
+          <option value="">Select a reason…</option>
+          <option value="FRAUD">Suspected Fraud</option>
+          <option value="PRIVACY">Privacy Violation</option>
+          <option value="SCAM">Financial Scam</option>
+          <option value="MALWARE">Malware / Spyware</option>
+          <option value="MISLEADING">Misleading Functionality</option>
+          <option value="OTHER">Other</option>
+        </select>
+      </div>
+      <div class="col-span-2">
+        <label>Description</label>
+        <textarea class="input-modern" name="description" rows="3" required placeholder="Describe your concern in detail…"></textarea>
+      </div>
+      <div>
+        <button class="btn-primary" type="submit">Submit Report</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Recent Reports</div>
+  <div class="overflow-x-auto">
+    <table class="table-modern" id="reportsTable">
+      <thead>
+        <tr>
+          <th>App</th>
+          <th>Reason</th>
+          <th>Description</th>
+          <th>Reporter</th>
+          <th>Date</th>
+          <th style="width:1%"></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="card-body text-muted text-center" id="reportsEmpty" style="display:none;">No community reports yet.</div>
+</div>
+{% endblock %}

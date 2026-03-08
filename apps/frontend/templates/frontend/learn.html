@@ -1,0 +1,116 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Stay Safe — AppShield{% endblock %}
+
+{% block content %}
+<div class="page-actions">
+  <h1 class="page-title" style="margin-bottom: 0;">Stay Safe: App Safety Guide</h1>
+</div>
+<p class="text-muted mb-8" style="max-width: 700px;">Learn how to protect yourself from fraudulent, deceptive, and privacy-violating apps. This guide covers common threats and practical steps you can take.</p>
+
+<div class="learn-grid">
+
+  <div class="card learn-card">
+    <div class="card-body">
+      <div class="learn-icon learn-icon-fraud">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h2 class="learn-card-title">Recognizing Fake Reviews</h2>
+      <ul class="learn-list">
+        <li><strong>Generic praise with no specifics</strong> — Reviews that say "Great app!" or "Love it!" without mentioning any feature are often fake.</li>
+        <li><strong>Clusters of 5-star reviews</strong> — A sudden burst of perfect ratings in a short time window is a classic sign of purchased reviews.</li>
+        <li><strong>Repetitive language</strong> — Multiple reviews using the same phrases or sentence structures indicate bot-generated content.</li>
+        <li><strong>No verified purchase tag</strong> — Legitimate reviews often come from verified users who actually downloaded the app.</li>
+        <li><strong>Reviewer profiles with no history</strong> — Check if reviewers have reviewed other apps or were created just to review one app.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card learn-card">
+    <div class="card-body">
+      <div class="learn-icon learn-icon-privacy">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2 class="learn-card-title">Protecting Your Privacy</h2>
+      <ul class="learn-list">
+        <li><strong>Check permissions before installing</strong> — A flashlight app shouldn't need access to your contacts, camera, or location.</li>
+        <li><strong>Read the privacy policy</strong> — Look for mentions of "third-party sharing," "advertising partners," and "data selling."</li>
+        <li><strong>Use app permission managers</strong> — Both Android and iOS let you revoke permissions after installation.</li>
+        <li><strong>Watch for data collection warnings</strong> — App stores now show "Data Safety" sections that summarize what data the app collects.</li>
+        <li><strong>Avoid apps without privacy policies</strong> — A missing privacy policy is a major red flag that the developer isn't transparent.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card learn-card">
+    <div class="card-body">
+      <div class="learn-icon learn-icon-scam">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <h2 class="learn-card-title">Common Scam Tactics</h2>
+      <ul class="learn-list">
+        <li><strong>Bait-and-switch</strong> — The app promises one thing in the description but delivers something completely different after installation.</li>
+        <li><strong>Hidden subscriptions</strong> — Free trials that auto-convert to expensive weekly/monthly charges with difficult cancellation processes.</li>
+        <li><strong>Fake urgency</strong> — "Your phone is infected! Download now!" warnings designed to trick you into installing malware.</li>
+        <li><strong>Clone apps</strong> — Apps that mimic popular brands (with slightly different names/logos) to harvest your credentials.</li>
+        <li><strong>Excessive ads masking real functionality</strong> — Apps where the actual feature is buried under layers of advertisements.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card learn-card">
+    <div class="card-body">
+      <div class="learn-icon learn-icon-action">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h2 class="learn-card-title">What to Do If You've Installed a Suspicious App</h2>
+      <ul class="learn-list">
+        <li><strong>Uninstall immediately</strong> — Remove the app from your device as soon as you notice suspicious behavior.</li>
+        <li><strong>Change your passwords</strong> — If you entered any credentials into the app, change those passwords immediately.</li>
+        <li><strong>Check for unauthorized charges</strong> — Review your bank and app store purchase history for unexpected charges.</li>
+        <li><strong>Report the app</strong> — Use the app store's reporting feature to flag the app for other users.</li>
+        <li><strong>Run a security scan</strong> — Use a reputable mobile security tool to check for remaining threats on your device.</li>
+        <li><strong>Monitor your accounts</strong> — Keep an eye on your email and financial accounts for unusual activity in the following weeks.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card learn-card">
+    <div class="card-body">
+      <div class="learn-icon learn-icon-check">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h2 class="learn-card-title">Pre-Install Safety Checklist</h2>
+      <ul class="learn-list">
+        <li><strong>Check the developer name</strong> — Is it a known, reputable company? Search for them online.</li>
+        <li><strong>Read recent reviews (not just top ones)</strong> — Sort by "Most Recent" to see if new issues are emerging.</li>
+        <li><strong>Compare download count vs. review count</strong> — Legitimate apps typically have proportional engagement.</li>
+        <li><strong>Look at the app's update history</strong> — Regularly updated apps are more likely to be actively maintained and safe.</li>
+        <li><strong>Check the "Similar Apps" section</strong> — If the store doesn't show similar apps, it may not be properly categorized.</li>
+        <li><strong>Use AppShield</strong> — Run the app through our analysis engine before installing to get a comprehensive safety assessment.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card learn-card">
+    <div class="card-body">
+      <div class="learn-icon learn-icon-data">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h2 class="learn-card-title">Understanding App Risk Scores</h2>
+      <ul class="learn-list">
+        <li><strong>Safety Score (0–100)</strong> — Higher is safer. Scores below 50 indicate significant fraud signals.</li>
+        <li><strong>Privacy Risk (0–100)</strong> — Higher means more risk. Scores above 70 indicate serious privacy concerns.</li>
+        <li><strong>Health Scores</strong> — Five dimensions (Safety, Privacy, Quality, Trust, Sentiment) give a holistic view of app health.</li>
+        <li><strong>Recommendation Actions</strong> — "Safe to Install," "Proceed with Caution," or "Recommend Uninstall" provide clear guidance.</li>
+        <li><strong>Trend Analysis</strong> — Watch how scores change over time. A declining safety score is a warning sign even if the current score seems acceptable.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="disclaimer-box" style="margin-top: 32px;">
+  <strong>Disclaimer:</strong> This educational content is provided for informational purposes only. AppShield performs risk classification based on review analysis and metadata. It does not perform malware scanning or binary code analysis. Always exercise your own judgment when installing apps.
+</div>
+{% endblock %}

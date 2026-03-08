@@ -1,0 +1,19 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Analysis Detail — AppShield{% endblock %}
+{% block head_scripts %}
+<script defer>window.__RUN_ID__ = {{ run_id }};</script>
+<script defer src="{% static 'frontend/js/pages/analysis_detail.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-actions flex-wrap items-center justify-between gap-4">
+  <h1 class="page-title" style="margin-bottom: 0;">Analysis Detail</h1>
+  <div class="flex-wrap gap-3">
+    <a id="btnExport" href="#" class="btn-secondary" target="_blank">Export Report</a>
+    <a href="/analysis/" class="btn-secondary">Back to Analysis</a>
+  </div>
+</div>
+
+<div id="runHost" class="text-muted">Loading...</div>
+{% endblock %}

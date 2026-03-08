@@ -1,0 +1,36 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Developer Profile — AppShield{% endblock %}
+{% block head_scripts %}
+<script defer>window.__DEV_NAME__ = "{{ developer_name|escapejs }}";</script>
+<script defer src="{% static 'frontend/js/pages/developer_profile.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-actions flex-wrap items-center justify-between gap-4">
+  <h1 class="page-title" style="margin-bottom: 0;" id="devTitle">Developer Profile</h1>
+  <a href="/insights/" class="btn-secondary">Back to Insights</a>
+</div>
+
+<div id="devStats" class="stats-grid mb-8"></div>
+
+<div class="card">
+  <div class="card-header">Apps by This Developer</div>
+  <div class="overflow-x-auto">
+    <table class="table-modern" id="devAppsTable">
+      <thead>
+        <tr>
+          <th>App Name</th>
+          <th>Package</th>
+          <th>Category</th>
+          <th>Reviews</th>
+          <th>Label</th>
+          <th>Safety Score</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="card-body text-muted text-center" id="devEmpty" style="display:none;">No apps found for this developer.</div>
+</div>
+{% endblock %}

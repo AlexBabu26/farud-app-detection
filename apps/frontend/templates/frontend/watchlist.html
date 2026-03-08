@@ -1,0 +1,23 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Watchlist — AppShield{% endblock %}
+{% block head_scripts %}
+<script defer src="{% static 'frontend/js/pages/watchlist.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-actions flex-wrap items-center justify-between gap-4">
+  <h1 class="page-title" style="margin-bottom: 0;">Watchlist</h1>
+  <a href="/dashboard/" class="btn-secondary">Back to Dashboard</a>
+</div>
+
+<p class="text-muted mb-6">Monitor your watched apps for safety score changes and community reports.</p>
+
+<div id="watchlistEmpty" class="card" style="display:none;">
+  <div class="card-body text-muted text-center">
+    No apps in your watchlist yet. Visit an app's detail page and click "Watch" to add it.
+  </div>
+</div>
+
+<div id="watchlistGrid" class="watchlist-grid"></div>
+{% endblock %}

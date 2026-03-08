@@ -1,0 +1,36 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block title %}Compare Apps — AppShield{% endblock %}
+{% block head_scripts %}
+<script defer src="{% static 'frontend/js/pages/compare.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-actions flex-wrap items-center justify-between gap-4">
+  <h1 class="page-title" style="margin-bottom: 0;">Compare Apps</h1>
+  <a href="/dashboard/" class="btn-secondary">Back to Dashboard</a>
+</div>
+
+<div class="card mb-8">
+  <div class="card-header">Select Apps to Compare</div>
+  <div class="card-body">
+    <p class="text-small text-muted mb-6">Select 2–5 apps from your collection to compare side by side.</p>
+    <div id="appCheckboxes" class="compare-checkbox-grid"></div>
+    <button class="btn-primary" id="btnCompare" type="button" style="margin-top: 16px;" disabled>Compare Selected</button>
+  </div>
+</div>
+
+<div id="compareResults" style="display:none;">
+  <h2 class="page-title" style="font-size:1.3rem;">Comparison Results</h2>
+  <div id="compareCards" class="compare-grid"></div>
+  <div id="compareTable" class="card mt-8" style="display:none;">
+    <div class="card-header">Side-by-Side Metrics</div>
+    <div class="overflow-x-auto">
+      <table class="table-modern" id="compareMetricsTable">
+        <thead><tr id="compareTableHead"></tr></thead>
+        <tbody id="compareTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
