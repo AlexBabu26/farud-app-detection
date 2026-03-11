@@ -100,7 +100,8 @@ def _build_llm_payload(app: MobileApp, reviews: List[Review], model_name: str) -
         "reviews": review_items,
         "instructions": (
             "Return JSON only, no markdown, no extra keys. "
-            "If evidence is insufficient, choose SUSPICIOUS with low confidence. "
+            "If evidence is limited, choose the best-fit label from available signals with lower confidence. "
+            "Use SUSPICIOUS only when evidence is genuinely mixed or contradictory. "
             "For privacy_risk_score: 0 = no risk, 100 = extreme risk. "
             "For health_scores: 100 = best possible in each dimension. "
             "The safety_recommendation should be written for a non-technical consumer."
@@ -240,6 +241,132 @@ def _validate_llm_result(obj: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _review_signal_summary(reviews: List[Review]) -> Dict[str, Any]:
+    severe_keywords = (
+        "scam", "fraud", "phish", "stole", "stolen", "unauthorized",
+        "malware", "spyware", "ransom", "hacked", "fake payment",
+    )
+    warning_keywords = (
+        "crash", "freez", "bug", "battery", "overheat", "permission",
+        "privacy", "tracking", "data leak", "ads", "suspicious",
+    )
+
+    total = len(reviews)
+    rated_count = 0
+    ratings_sum = 0.0
+    positive_ratings = 0
+    negative_ratings = 0
+    severe_count = 0
+    warning_count = 0
+
+    for r in reviews:
+        text = str(getattr(r, "text", "") or "").lower()
+        if any(k in text for k in severe_keywords):
+            severe_count += 1
+        if any(k in text for k in warning_keywords):
+            warning_count += 1
+
+        rating = getattr(r, "rating", None)
+        if rating is None:
+            continue
+        try:
+            val = float(rating)
+        except Exception:
+            continue
+        rated_count += 1
+        ratings_sum += val
+        if val >= 4:
+            positive_ratings += 1
+        elif val <= 2:
+            negative_ratings += 1
+
+    avg_rating = (ratings_sum / rated_count) if rated_count else None
+    return {
+        "total": total,
+        "rated_count": rated_count,
+        "avg_rating": avg_rating,
+        "positive_ratings": positive_ratings,
+        "negative_ratings": negative_ratings,
+        "severe_count": severe_count,
+        "warning_count": warning_count,
+    }
+
+
+def _calibrate_label_from_reviews(validated: Dict[str, Any], reviews: List[Review]) -> Dict[str, Any]:
+    """
+    If the model returns low-confidence SUSPICIOUS for clearly polarized evidence,
+    calibrate the final label to avoid persistent "always suspicious" outcomes.
+    """
+    calibrated = dict(validated)
+    label = str(calibrated.get("label", "")).upper()
+    confidence = float(calibrated.get("confidence", 0.0) or 0.0)
+    if label != "SUSPICIOUS" or confidence > 0.65:
+        return calibrated
+
+    stats = _review_signal_summary(reviews)
+    total = stats["total"]
+    rated_count = stats["rated_count"]
+    avg_rating = stats["avg_rating"]
+    positive_ratings = stats["positive_ratings"]
+    negative_ratings = stats["negative_ratings"]
+    severe_count = stats["severe_count"]
+    warning_count = stats["warning_count"]
+
+    if total == 0:
+        return calibrated
+
+    strong_legit = (
+        rated_count >= 1
+        and avg_rating is not None
+        and avg_rating >= 4.4
+        and positive_ratings >= max(1, int(round(rated_count * 0.67)))
+        and severe_count == 0
+        and warning_count <= max(1, total // 2)
+    )
+    strong_fraud = (
+        severe_count >= max(1, total // 2)
+        or (
+            rated_count >= 1
+            and avg_rating is not None
+            and avg_rating <= 2.0
+            and negative_ratings >= max(1, int(round(rated_count * 0.67)))
+            and (severe_count + warning_count) >= 1
+        )
+        or (
+            rated_count >= 2
+            and avg_rating is not None
+            and avg_rating <= 1.7
+            and negative_ratings == rated_count
+        )
+    )
+
+    if strong_fraud:
+        calibrated["label"] = "FRAUD"
+        calibrated["confidence"] = max(confidence, 0.72)
+        calibrated["recommendation_action"] = "RECOMMEND_UNINSTALL"
+        calibrated["safety_score"] = _clamp_int(
+            min(int(calibrated.get("safety_score", 100)), 35), 0, 100, 35
+        )
+        reason = "Review signals are strongly negative with fraud-risk indicators."
+    elif strong_legit:
+        calibrated["label"] = "LEGIT"
+        calibrated["confidence"] = max(confidence, 0.72)
+        calibrated["recommendation_action"] = "SAFE_TO_INSTALL"
+        calibrated["safety_score"] = _clamp_int(
+            max(int(calibrated.get("safety_score", 0)), 75), 0, 100, 75
+        )
+        reason = "Review signals are strongly positive with no severe fraud indicators."
+    else:
+        return calibrated
+
+    current = str(calibrated.get("rationale", "") or "").strip()
+    if current:
+        calibrated["rationale"] = _clean_text(f"{current}. Calibration note: {reason}", 1200)
+    else:
+        calibrated["rationale"] = _clean_text(reason, 1200)
+    return calibrated
+
+
 class AnalysisRunViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AnalysisRunSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -331,6 +458,7 @@ def _run_single_analysis(user, app, max_reviews):
 
         parsed_obj, json_text = _extract_content_as_json(content)
         validated = _validate_llm_result(parsed_obj)
+        validated = _calibrate_label_from_reviews(validated, reviews)
 
         run.status = "SUCCESS"
         run.llm_label = validated["label"]
