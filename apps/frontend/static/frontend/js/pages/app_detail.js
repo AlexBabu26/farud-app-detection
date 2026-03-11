@@ -110,9 +110,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     kpiReviews.textContent = reviewCount ?? "—";
     const conf = (run.llm_confidence ?? 0) * 100;
     const label = (run.llm_label || "").toUpperCase();
-    kpiFraud.textContent = label === "FRAUD" ? conf.toFixed(0) + "%" : "0%";
-    kpiFraud.className = "stat-value " + (label === "FRAUD" ? "text-fraud" : "");
-    if (label !== "FRAUD") kpiFraud.style.color = "var(--primary)"; else kpiFraud.style.color = "";
+    // Fraud probability should always be meaningful, not only for FRAUD labels.
+    // Primary source: inverse of safety score (0..100, where 100 is safest).
+    let fraudProbability = null;
+    const safetyFromRun = Number(run.safety_score);
+    const safetyFromHealth = Number(parsed?.health_scores?.safety);
+    if (Number.isFinite(safetyFromRun)) {
+      fraudProbability = Math.max(0, Math.min(100, 100 - safetyFromRun));
+    } else if (Number.isFinite(safetyFromHealth)) {
+      fraudProbability = Math.max(0, Math.min(100, 100 - safetyFromHealth));
+    }
+
+    // Fallback to label/confidence mapping when safety score is unavailable.
+    if (fraudProbability === null) {
+      if (label === "FRAUD") fraudProbability = conf;
+      else if (label === "LEGIT") fraudProbability = 100 - conf;
+      else if (label === "SUSPICIOUS") fraudProbability = 50;
+      else fraudProbability = 0;
+    }
+
+    kpiFraud.textContent = fraudProbability.toFixed(0) + "%";
+    kpiFraud.className = "stat-value";
+    kpiFraud.style.color = fraudProbability >= 70
+      ? "var(--fraud)"
+      : fraudProbability >= 40
+        ? "var(--suspicious)"
+        : "var(--legit)";
     kpiSentiment.textContent = label || "—";
     kpiSentiment.className = "stat-value " + (label === "FRAUD" ? "text-fraud" : label === "LEGIT" ? "text-legit" : label === "SUSPICIOUS" ? "text-suspicious" : "text-muted");
 
